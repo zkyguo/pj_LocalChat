@@ -35,7 +35,7 @@ namespace SimpleChatGLMHTTP
 		 * @param InUrl 
 		 * @param InContent 
 		 * @param InCustomMetadataHeader 
-		 * @param isSynchronous 
+		 * @param isAsynchronous 
 		 * @param VerbType 
 		 * @return 
 		 */
@@ -43,7 +43,7 @@ namespace SimpleChatGLMHTTP
 			const FString& InUrl,
 			const FString& InContent,
 			const TMap<FString, FString>& InCustomMetadataHeader,
-			bool isSynchronous = false,
+			bool isAsynchronous = false,
 			SimpleChatGLMHTTP::EHTTPVerbType VerbType = SimpleChatGLMHTTP::EHTTPVerbType::CHATGLM_POST
 		);
 
@@ -53,7 +53,7 @@ namespace SimpleChatGLMHTTP
 		 * @param InUrl 
 		 * @param InByteData 
 		 * @param InCustomMetadataHeader 
-		 * @param isSynchronous 
+		 * @param isAsynchronous 
 		 * @param VerbType 
 		 * @return 
 		 */
@@ -61,7 +61,7 @@ namespace SimpleChatGLMHTTP
 			const FString& InUrl,
 			const TArray<uint8>& InByteData,
 			const TMap<FString, FString>& InCustomMetadataHeader,
-			bool isSynchronous = false,
+			bool isAsynchronous = false,
 			SimpleChatGLMHTTP::EHTTPVerbType VerbType = SimpleChatGLMHTTP::EHTTPVerbType::CHATGLM_POST
 		);
 
@@ -71,13 +71,15 @@ namespace SimpleChatGLMHTTP
 		 */
 		void CancelRequest(const FGuid& InRequestID);
 
+		bool IsValidRequest(const FGuid& InRequestID) const;
+
 	private :
 		FGuid Request(
 			const FString& InUrl,
 			const FString& InContent1,
 			const TArray<uint8>& InContent2,
 			const TMap<FString, FString>& InCustomMetadataHeader,
-			bool isSynchronous = false,
+			bool isAsynchronous = false,
 			SimpleChatGLMHTTP::EHTTPVerbType VerbType = SimpleChatGLMHTTP::EHTTPVerbType::CHATGLM_POST
 		);
 
@@ -89,6 +91,15 @@ namespace SimpleChatGLMHTTP
 
 	private:
 		FString HTTPVerbeToString(EHTTPVerbType InVerbType);
+
+	private :
+		/**
+		 * @brief Pool where we record all request in used
+		 */
+		TMap<FGuid, TSharedPtr<IHttpRequest, ESPMode::ThreadSafe>> HttpRequests;
+
+		FHttpDelegate Delegate;
+
 	};
 	
 }
