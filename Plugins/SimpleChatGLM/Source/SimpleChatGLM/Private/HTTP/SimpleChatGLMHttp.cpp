@@ -59,6 +59,7 @@ FGuid SimpleChatGLMHTTP::FHTTP::Request(const FString& InUrl, const FString& InC
 		HttpRequests.Add(RequestID, Request);
 		if(isAsynchronous)
 		{
+			//Immediately procede the next waiting request
 			FHttpModule::Get().GetHttpManager().Flush(EHttpFlushReason::Default);
 		}
 	}
